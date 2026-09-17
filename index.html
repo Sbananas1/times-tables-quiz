@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12 Times Table Quiz</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .quiz-box {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    #question {
+      font-size: 32px;
+      margin: 30px 0 20px;
+    }
+
+    input {
+      font-size: 24px;
+      width: 120px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    #feedback {
+      font-size: 20px;
+      min-height: 30px;
+      margin-top: 20px;
+    }
+
+    #progress {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="quiz-box">
+    <h1>Multiplication and Division Quiz</h1>
+
+    <p id="progress">Question 1 of 10</p>
+
+    <div id="question"></div>
+
+    <input
+      type="number"
+      id="answer"
+      placeholder="Answer"
+    >
+
+    <br>
+
+    <button id="submitButton" onclick="checkAnswer()">
+      Submit
+    </button>
+
+    <p id="feedback"></p>
+  </div>
+
+  <script>
+    const totalQuestions = 10;
+
+    let currentQuestion = 1;
+    let score = 0;
+    let correctAnswer = 0;
+
+    function makeQuestion() {
+
+      const number1 = Math.floor(Math.random() * 12) + 1;
+      const number2 = Math.floor(Math.random() * 12) + 1;
+
+      const operation = Math.random() < 0.5
+        ? "multiply"
+        : "divide";
+
+      if (operation === "multiply") {
+
+        correctAnswer = number1 * number2;
+
+        document.getElementById("question").textContent =
+          number1 + " × " + number2 + " = ?";
+
+      } else {
+
+        // This makes sure division always gives a whole-number answer.
+        const dividend = number1 * number2;
+
+        correctAnswer = number1;
+
+        document.getElementById("question").textContent =
+          dividend + " ÷ " + number2 + " = ?";
+      }
+
+      document.getElementById("answer").value = "";
+      document.getElementById("answer").focus();
+
+      document.getElementById("progress").textContent =
+        "Question " + currentQuestion + " of " + totalQuestions;
+    }
+
+
+    function checkAnswer() {
+
+      const answerBox = document.getElementById("answer");
+      const userAnswer = Number(answerBox.value);
+
+      if (answerBox.value === "") {
+        document.getElementById("feedback").textContent =
+          "Enter an answer first.";
+        return;
+      }
+
+      if (userAnswer === correctAnswer) {
+        score++;
+        document.getElementById("feedback").textContent =
+          "Correct!";
+      } else {
+        document.getElementById("feedback").textContent =
+          "Incorrect. The answer was " + correctAnswer + ".";
+      }
+
+      currentQuestion++;
+
+      if (currentQuestion <= totalQuestions) {
+
+        setTimeout(() => {
+          document.getElementById("feedback").textContent = "";
+          makeQuestion();
+        }, 1000);
+
+      } else {
+
+        setTimeout(showResults, 1000);
+      }
+    }
+
+
+    function showResults() {
+
+      document.getElementById("progress").textContent = "";
+
+      document.getElementById("question").innerHTML =
+        "Quiz finished!<br><br>" +
+        "You scored " + score + " / " + totalQuestions;
+
+      document.getElementById("answer").style.display = "none";
+
+      const button = document.getElementById("submitButton");
+
+      button.textContent = "Play Again";
+      button.onclick = restartQuiz;
+
+      document.getElementById("feedback").textContent = "";
+    }
+
+
+    function restartQuiz() {
+
+      currentQuestion = 1;
+      score = 0;
+
+      document.getElementById("answer").style.display = "inline-block";
+
+      const button = document.getElementById("submitButton");
+
+      button.textContent = "Submit";
+      button.onclick = checkAnswer;
+
+      makeQuestion();
+    }
+
+
+    // Press Enter to submit an answer.
+    document.getElementById("answer").addEventListener(
+      "keydown",
+      function(event) {
+        if (event.key === "Enter") {
+          checkAnswer();
+        }
+      }
+    );
+
+    makeQuestion();
+  </script>
+
+</body>
+</html>
