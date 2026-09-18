@@ -152,23 +152,38 @@
     }
 
 
-    function showResults() {
+function showResults() {
 
-      document.getElementById("progress").textContent = "";
+  let message = "";
 
-      document.getElementById("question").innerHTML =
-        "Quiz finished!<br><br>" +
-        "You scored " + score + " / " + totalQuestions;
+  if (score <= 3) {
+    message = "Better luck next time!";
+  } 
+  else if (score <= 7) {
+    message = "You're getting there!";
+  } 
+  else if (score <= 9) {
+    message = "So close!";
+  } 
+  else {
+    message = "Perfect Score!";
+  }
 
-      document.getElementById("answer").style.display = "none";
+  document.getElementById("progress").textContent = "";
 
-      const button = document.getElementById("submitButton");
+  document.getElementById("question").innerHTML =
+    message + "<br><br>" +
+    "You scored " + score + " / " + totalQuestions;
 
-      button.textContent = "Play Again";
-      button.onclick = restartQuiz;
+  document.getElementById("answer").style.display = "none";
 
-      document.getElementById("feedback").textContent = "";
-    }
+  const button = document.getElementById("submitButton");
+
+  button.textContent = "Play Again";
+  button.onclick = restartQuiz;
+
+  document.getElementById("feedback").textContent = "";
+}
 
 
     function restartQuiz() {
